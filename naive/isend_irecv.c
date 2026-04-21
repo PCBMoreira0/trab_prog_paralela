@@ -30,18 +30,15 @@ int main(int argc, char *argv[]) {
 	MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
     
     t_inicial = MPI_Wtime();
-    
+
     MPI_Request requests[num_procs-1];
     int results[num_procs-1];
     if(meu_ranque == 0){
-        
         for(i = 1; i < num_procs; i++){
             MPI_Request request;
             MPI_Irecv(&results[i-1], 1, MPI_INT, i, 0, MPI_COMM_WORLD, &requests[i-1]);
         }
     }
-    
-    MPI_Barrier(MPI_COMM_WORLD);
 
     inicio = 3 + meu_ranque*2;
     salto = num_procs*2;
@@ -57,7 +54,9 @@ int main(int argc, char *argv[]) {
             }
         }
         else{
-            MPI_Rsend(&cont, 1 , MPI_INT, 0, 0, MPI_COMM_WORLD);
+            MPI_Request requests;
+            MPI_Isend(&cont, 1 , MPI_INT, 0, 0, MPI_COMM_WORLD, &requests);
+            MPI_Wait(&requests, MPI_STATUS_IGNORE);
         }
     }
 
