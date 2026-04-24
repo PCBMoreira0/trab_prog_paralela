@@ -76,9 +76,11 @@ int main(int argc, char *argv[])
                 tag = 99;
                 stop++;
             }
+            else{
+                MPI_Irecv(&resultados[index], 1, MPI_INT, dest, MPI_ANY_TAG, MPI_COMM_WORLD, &requests[index]);
+            }
             /* Envia um nvo pedaço com TAMANHO números para o mesmo processo*/
             MPI_Send(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
-
             inicio += TAMANHO;
         }
     }
