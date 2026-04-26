@@ -1,0 +1,180 @@
+============================================================
+       RESULTADOS DAS EXECUÇÕES - NÚMEROS PRIMOS (N=50000000)     
+============================================================
+
+------------------------------------------------------------
+MÉTODO: naive / bsend_irecv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 23.049 
+>>> TESTE: 4 PROCESSOS
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 7.217 
+
+------------------------------------------------------------
+MÉTODO: naive / bsend_recv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 23.106 
+>>> TESTE: 4 PROCESSOS
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 7.222 
+
+------------------------------------------------------------
+MÉTODO: naive / isend_irecv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Total de primos: 3001134
+Tempo: 22.935947
+>>> TESTE: 4 PROCESSOS
+Total de primos: 3001134
+Tempo: 7.174951
+
+------------------------------------------------------------
+MÉTODO: naive / isend_recv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Total de primos: 3001134
+Tempo: 23.014117
+>>> TESTE: 4 PROCESSOS
+Total de primos: 3001134
+Tempo: 7.331692
+
+------------------------------------------------------------
+MÉTODO: naive / rsend_irecv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Total de primos: 3001134
+Tempo: 22.971202
+>>> TESTE: 4 PROCESSOS
+Total de primos: 3001134
+Tempo: 7.216412
+
+------------------------------------------------------------
+MÉTODO: naive / rsend_recv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Total de primos: 3001134
+Tempo: 22.887669
+>>> TESTE: 4 PROCESSOS
+Total de primos: 3001134
+Tempo: 7.196595
+
+------------------------------------------------------------
+MÉTODO: naive / send_irecv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Total de primos: 3001134
+Tempo: 22.935212
+>>> TESTE: 4 PROCESSOS
+Total de primos: 3001134
+Tempo: 7.329668
+
+------------------------------------------------------------
+MÉTODO: naive / send_recv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Total de primos: 3001134
+Tempo: 22.963124
+>>> TESTE: 4 PROCESSOS
+Total de primos: 3001134
+Tempo: 7.145113
+
+------------------------------------------------------------
+MÉTODO: naive / ssend_irecv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 22.968 
+>>> TESTE: 4 PROCESSOS
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 7.294 
+
+------------------------------------------------------------
+MÉTODO: naive / ssend_recv
+------------------------------------------------------------
+>>> TESTE: 1 PROCESSO(S)
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 23.112 
+>>> TESTE: 4 PROCESSOS
+Quant. de primos entre 1 e n: 3001134 
+Tempo de execucao: 7.238 
+
+------------------------------------------------------------
+MÉTODO: bag / bsend_irecv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Bag of Tasks (Bsend+Irecv) | Primos: 3001134 | Tempo: 27.608
+>>> TESTE: 4 PROCESSOS
+Bag of Tasks (Bsend+Irecv) | Primos: 3001134 | Tempo: 9.975
+
+------------------------------------------------------------
+MÉTODO: bag / bsend_recv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Bag of Tasks (Bsend+Recv) | Primos: 3001134 | Tempo: 27.310
+>>> TESTE: 4 PROCESSOS
+Bag of Tasks (Bsend+Recv) | Primos: 3001134 | Tempo: 10.088
+
+------------------------------------------------------------
+MÉTODO: bag / isend_irecv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Bag of Tasks (Isend+Irecv) | Primos: 3001134 | Tempo: 28.503
+>>> TESTE: 4 PROCESSOS
+Bag of Tasks (Isend+Irecv) | Primos: 3001134 | Tempo: 10.135
+
+------------------------------------------------------------
+MÉTODO: bag / isend_recv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Bag of Tasks (Isend+Recv) | Primos: 3001134 | Tempo: 30.291
+>>> TESTE: 4 PROCESSOS
+Bag of Tasks (Isend+Recv) | Primos: 3001134 | Tempo: 10.136
+
+------------------------------------------------------------
+MÉTODO: bag / rsend_irecv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Bag of Tasks (Rsend + Irecv) | Primos: 3001134 | Tempo: 30.014
+>>> TESTE: 4 PROCESSOS
+Bag of Tasks (Rsend + Irecv) | Primos: 3001134 | Tempo: 10.141
+
+------------------------------------------------------------
+MÉTODO: bag / send_irecv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Quant. de primos entre 1 e 50000000: 3001134 
+Tempo de execucao: 29.913 
+>>> TESTE: 4 PROCESSOS
+Quant. de primos entre 1 e 50000000: 3001134 
+Tempo de execucao: 10.031 
+
+------------------------------------------------------------
+MÉTODO: bag / send_recv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Quant. de primos entre 1 e 50000000: 3001134 
+Tempo de execucao: 29.735 
+>>> TESTE: 4 PROCESSOS
+Quant. de primos entre 1 e 50000000: 3001134 
+Tempo de execucao: 10.201 
+
+------------------------------------------------------------
+MÉTODO: bag / ssend_irecv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Bag of Tasks (Ssend+Irecv) | Primos: 3001134 | Tempo: 30.032
+>>> TESTE: 4 PROCESSOS
+Bag of Tasks (Ssend+Irecv) | Primos: 3001134 | Tempo: 10.239
+
+------------------------------------------------------------
+MÉTODO: bag / ssend_recv
+------------------------------------------------------------
+>>> TESTE: 2 PROCESSO(S)
+Bag of Tasks (Ssend+Recv) | Primos: 3001134 | Tempo: 29.785
+>>> TESTE: 4 PROCESSOS
+Bag of Tasks (Ssend+Recv) | Primos: 3001134 | Tempo: 10.074
+
