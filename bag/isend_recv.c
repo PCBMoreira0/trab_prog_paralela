@@ -29,7 +29,9 @@ int main(int argc, char *argv[]) {
     if (meu_ranque == 0) {
         for (dest = 1, inicio = 3; dest < num_procs; dest++, inicio += TAMANHO) {
             int t = (inicio > n) ? 50 : 1;
-            MPI_Send(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD);
+            MPI_Request req_s;
+            MPI_Isend(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD, &req_s);
+            MPI_Wait(&req_s, MPI_STATUS_IGNORE);
         }
 
         while (stop < (num_procs - 1)) {
@@ -38,7 +40,9 @@ int main(int argc, char *argv[]) {
             dest = estado.MPI_SOURCE;
 
             if (inicio > n) { tag = 99; stop++; }
-            MPI_Send(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
+            MPI_Request req_s;
+            MPI_Isend(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD, &req_s);
+            MPI_Wait(&req_s, MPI_STATUS_IGNORE);
             inicio += TAMANHO;
         }
     } else {
@@ -53,7 +57,6 @@ int main(int argc, char *argv[]) {
             }
             
             MPI_Isend(&cont, 1, MPI_INT, raiz, 1, MPI_COMM_WORLD, &request_send);
-            
             MPI_Wait(&request_send, MPI_STATUS_IGNORE);
             
             MPI_Recv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &estado);

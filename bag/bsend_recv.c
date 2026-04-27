@@ -14,8 +14,7 @@ int primo(int n) {
 
 int main(int argc, char *argv[]) {
     double t_inicial, t_final;
-    int cont = 0, total = 0;
-    int i, n, meu_ranque, num_procs, inicio, dest, raiz = 0, tag = 1, stop = 0;
+    int cont = 0, total = 0, i, n, meu_ranque, num_procs, inicio, dest, raiz = 0, tag = 1, stop = 0;
     MPI_Status estado;
 
     if (argc < 2) { printf("Entre com n.\n"); return 0; }
@@ -28,9 +27,13 @@ int main(int argc, char *argv[]) {
     t_inicial = MPI_Wtime();
 
     if (meu_ranque == 0) {
+        int size_mestre = num_procs * (MPI_BSEND_OVERHEAD + sizeof(int));
+        char *buf_mestre = (char *)malloc(size_mestre);
+        MPI_Buffer_attach(buf_mestre, size_mestre);
+
         for (dest = 1, inicio = 3; dest < num_procs; dest++, inicio += TAMANHO) {
             int tag_t = (inicio > n) ? 50 : 1;
-            MPI_Send(&inicio, 1, MPI_INT, dest, tag_t, MPI_COMM_WORLD);
+            MPI_Bsend(&inicio, 1, MPI_INT, dest, tag_t, MPI_COMM_WORLD);
         }
 
         while (stop < (num_procs - 1)) {
@@ -39,9 +42,11 @@ int main(int argc, char *argv[]) {
             dest = estado.MPI_SOURCE;
 
             if (inicio > n) { tag = 99; stop++; }
-            MPI_Send(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
+            MPI_Bsend(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
             inicio += TAMANHO;
         }
+        MPI_Buffer_detach(&buf_mestre, &size_mestre);
+        free(buf_mestre);
     } else {
         int size = MPI_BSEND_OVERHEAD + sizeof(int);
         char *buf = (char *)malloc(size);
@@ -57,7 +62,6 @@ int main(int argc, char *argv[]) {
             MPI_Bsend(&cont, 1, MPI_INT, raiz, 1, MPI_COMM_WORLD);
             MPI_Recv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &estado);
         }
-        
         MPI_Buffer_detach(&buf, &size);
         free(buf);
     }

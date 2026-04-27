@@ -14,8 +14,7 @@ int primo(int n) {
 
 int main(int argc, char *argv[]) {
     double t_inicial, t_final;
-    int cont = 0, total = 0;
-    int i, n, meu_ranque, num_procs, inicio, dest, raiz = 0, tag = 1, stop = 0;
+    int cont = 0, total = 0, i, n, meu_ranque, num_procs, inicio, dest, raiz = 0, tag = 1, stop = 0;
     MPI_Status estado;
 
     n = strtol(argv[1], (char **)NULL, 10);
@@ -26,13 +25,15 @@ int main(int argc, char *argv[]) {
     t_inicial = MPI_Wtime();
 
     if (meu_ranque == 0) {
-        MPI_Request requests[num_procs - 1];
-        int resultados[num_procs - 1];
+        MPI_Request requests[num_procs];
+        int resultados[num_procs];
+
+        MPI_Barrier(MPI_COMM_WORLD); 
 
         for (dest = 1, inicio = 3; dest < num_procs; dest++, inicio += TAMANHO) {
             int t = (inicio > n) ? 50 : 1;
             MPI_Irecv(&resultados[dest - 1], 1, MPI_INT, dest, MPI_ANY_TAG, MPI_COMM_WORLD, &requests[dest - 1]);
-            MPI_Send(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD);
+            MPI_Rsend(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD); // 100% Seguro!
         }
 
         while (stop < (num_procs - 1)) {
@@ -42,17 +43,19 @@ int main(int argc, char *argv[]) {
             dest = estado.MPI_SOURCE;
 
             if (inicio > n) {
-                tag = 99;
-                stop++;
+                tag = 99; stop++;
             } else {
                 MPI_Irecv(&resultados[index], 1, MPI_INT, dest, MPI_ANY_TAG, MPI_COMM_WORLD, &requests[index]);
             }
-            MPI_Send(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
+            MPI_Rsend(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD); // 100% Seguro!
             inicio += TAMANHO;
         }
     } else {
         MPI_Request req_r;
         MPI_Irecv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &req_r);
+        
+        MPI_Barrier(MPI_COMM_WORLD); 
+        
         MPI_Wait(&req_r, &estado);
         while (estado.MPI_TAG != 99) {
             cont = 0;
@@ -60,18 +63,18 @@ int main(int argc, char *argv[]) {
                 for (i = inicio; i < (inicio + TAMANHO) && i < n; i += 2)
                     if (primo(i) == 1) cont++;
             }
-            MPI_Rsend(&cont, 1, MPI_INT, raiz, 1, MPI_COMM_WORLD);
             
             MPI_Irecv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &req_r);
+            
+            MPI_Rsend(&cont, 1, MPI_INT, raiz, 1, MPI_COMM_WORLD);
             MPI_Wait(&req_r, &estado);
         }
     }
 
     if (meu_ranque == 0) {
         t_final = MPI_Wtime();
-        printf("Bag of Tasks (Rsend + Irecv) | Primos: %d | Tempo: %1.3f\n", total + 1, t_final - t_inicial);
+        printf("Bag of Tasks (Rsend+Irecv) | Primos: %d | Tempo: %1.3f\n", total + 1, t_final - t_inicial);
     }
-    MPI_Barrier(MPI_COMM_WORLD);
     MPI_Finalize();
     return 0;
 }

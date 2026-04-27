@@ -25,13 +25,17 @@ int main(int argc, char *argv[]) {
     t_inicial = MPI_Wtime();
 
     if (meu_ranque == 0) {
-        MPI_Request requests[num_procs - 1];
-        int resultados[num_procs - 1];
+        MPI_Request requests[num_procs];
+        int resultados[num_procs];
+
+        int size_mestre = num_procs * (MPI_BSEND_OVERHEAD + sizeof(int));
+        char *buf_mestre = (char *)malloc(size_mestre);
+        MPI_Buffer_attach(buf_mestre, size_mestre);
 
         for (dest = 1, inicio = 3; dest < num_procs; dest++, inicio += TAMANHO) {
             int t = (inicio > n) ? 50 : 1;
             MPI_Irecv(&resultados[dest - 1], 1, MPI_INT, dest, MPI_ANY_TAG, MPI_COMM_WORLD, &requests[dest - 1]);
-            MPI_Send(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD);
+            MPI_Bsend(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD);
         }
 
         while (stop < (num_procs - 1)) {
@@ -44,16 +48,20 @@ int main(int argc, char *argv[]) {
             else {
                 MPI_Irecv(&resultados[index], 1, MPI_INT, dest, MPI_ANY_TAG, MPI_COMM_WORLD, &requests[index]);
             }
-            MPI_Send(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
+            MPI_Bsend(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
             inicio += TAMANHO;
         }
+        MPI_Buffer_detach(&buf_mestre, &size_mestre);
+        free(buf_mestre);
     } else {
-        // Trabalhador prepara buffer para o Bsend
         int size = MPI_BSEND_OVERHEAD + sizeof(int);
         char *buf = (char *)malloc(size);
         MPI_Buffer_attach(buf, size);
 
-        MPI_Recv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &estado);
+        MPI_Request req_r;
+        MPI_Irecv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &req_r);
+        MPI_Wait(&req_r, &estado);
+        
         while (estado.MPI_TAG != 99) {
             cont = 0;
             if (estado.MPI_TAG == 1) {
@@ -61,7 +69,9 @@ int main(int argc, char *argv[]) {
                     if (primo(i) == 1) cont++;
             }
             MPI_Bsend(&cont, 1, MPI_INT, raiz, 1, MPI_COMM_WORLD);
-            MPI_Recv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &estado);
+            
+            MPI_Irecv(&inicio, 1, MPI_INT, raiz, MPI_ANY_TAG, MPI_COMM_WORLD, &req_r);
+            MPI_Wait(&req_r, &estado);
         }
         MPI_Buffer_detach(&buf, &size);
         free(buf);

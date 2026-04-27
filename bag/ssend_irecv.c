@@ -25,13 +25,13 @@ int main(int argc, char *argv[]) {
     t_inicial = MPI_Wtime();
 
     if (meu_ranque == 0) {
-        MPI_Request req_recv[num_procs - 1];
-        int resultados[num_procs - 1];
+        MPI_Request req_recv[num_procs];
+        int resultados[num_procs];
 
         for (dest = 1, inicio = 3; dest < num_procs; dest++, inicio += TAMANHO) {
             int t = (inicio > n) ? 50 : 1;
             MPI_Irecv(&resultados[dest - 1], 1, MPI_INT, dest, MPI_ANY_TAG, MPI_COMM_WORLD, &req_recv[dest - 1]);
-            MPI_Send(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD);
+            MPI_Ssend(&inicio, 1, MPI_INT, dest, t, MPI_COMM_WORLD);
         }
 
         while (stop < (num_procs - 1)) {
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
             else {
                 MPI_Irecv(&resultados[index], 1, MPI_INT, dest, MPI_ANY_TAG, MPI_COMM_WORLD, &req_recv[index]);
             }
-            MPI_Send(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
+            MPI_Ssend(&inicio, 1, MPI_INT, dest, tag, MPI_COMM_WORLD);
             inicio += TAMANHO;
         }
     } else {
