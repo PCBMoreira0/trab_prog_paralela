@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     if(num_procs > 1){
         if(meu_ranque == 0){
             for(i = 1; i < num_procs; i++){
-                MPI_Send(NULL, 0, MPI_INT, i, 0, MPI_COMM_WORLD);
+                MPI_Ssend(NULL, 0, MPI_INT, i, 0, MPI_COMM_WORLD);
                 int processCount;
                 MPI_Recv(&processCount, 1, MPI_INT, i, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
                 cont += processCount;
